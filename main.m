@@ -53,11 +53,11 @@ function main(file)
             inputVector = im2double(in);
             inputVectors(i) = inputVector;
         end
-        fid = fopen('input.bin', 'wb');
+        fid = fopen('nn/input.bin', 'wb');
         fwrite(fid, inputVectors);
         fclose(fid);
-        system('nn');
-        resultVector = csvread('output.csv');
+        system('nn/nn');
+        resultVector = csvread('nn/output.csv');
         
         % Use Matlab ------------------------------
 %         resultVector = zeros(1, coinImageCount);
