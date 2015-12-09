@@ -44,17 +44,34 @@ function main(file)
         imgGrayEven = eliminateLight(image);
         coinImages = getCoinImages(imgGrayEven, otherRadiuses, otherCenters);
         coinImageCount = length(otherRadiuses);
-        resultVector = zeros(1, coinImageCount);
+        % Use C++ ----------------------------------
+        inputVectors = zeros(coinImageCount, 32040);
         for i = 1:coinImageCount
-          image = coinImages{i};
-          projectedImage = ringProject(image);
-          in = reshape(projectedImage, 32040, 1);
-          testX = im2double(in);
-          testY = net(testX);
-          testY = uint8(testY);
-          testIndices = vec2ind(testY);
-          resultVector(1, i) = testIndices;
+            image = coinImages{i};
+            projectedImage = ringProject(image);
+            in = reshape(projectedImage, 1, 32040);
+            inputVector = im2double(in);
+            inputVectors(i) = inputVector;
         end
+        fid = fopen('input.bin', 'wb');
+        fwrite(fid, inputVectors);
+        fclose(fid);
+        system('nn');
+        resultVector = csvread('output.csv');
+        
+        % Use Matlab ------------------------------
+%         resultVector = zeros(1, coinImageCount);
+%         for i = 1:coinImageCount
+%           image = coinImages{i};
+%           projectedImage = ringProject(image);
+%           in = reshape(projectedImage, 32040, 1);
+%           testX = im2double(in);
+%           testY = net(testX);
+%           testY = uint8(testY);
+%           testIndices = vec2ind(testY);
+%           resultVector(1, i) = testIndices;
+%         end
+
         valueVector = classValue(resultVector);
         % choose the mode of the classification result as the final result
         individualValue = mode(valueVector);
