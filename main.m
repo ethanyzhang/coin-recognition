@@ -53,7 +53,7 @@ function main(file)
             inputVectors(i,:) = in;
         end
         csvwrite(fullfile('data', 'input.csv'), inputVectors);
-        system(fullfile('nn', 'nn'));
+        system('cd nn && ./nn');
         resultVector = csvread(fullfile('data', 'output.csv'));
         
         % Use Matlab ------------------------------

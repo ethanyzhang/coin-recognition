@@ -35,8 +35,12 @@ bool writeCoinLabel(NeuralData& nd, NeuralNet& nn) {
 	std::ofstream out(path, ios::trunc);
 
 	for (int i = 0; i < nd.imgMatTest.size(); i++) {
-		out << nn.recognize(nd.imgMatTest[i]) + 1 << ",";
+		out << nn.recognize(nd.imgMatTest[i]) + 1;
+		if (i != nd.imgMatTest.size() - 1) {
+			out << ",";
+		}
 	}
+	out << "\n";
 
 	return true;
 }
