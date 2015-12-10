@@ -8,7 +8,7 @@ objects:=$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(sources)))
 dependence:=$(objects:.o=.d)
 
 all: $(objects)
-	$(CC) $(CPPFLAGS) $^ -o $@
+	$(CC) $(CPPFLAGS) $^ -o nn
 #	@./$@
 
 %.o: %.c

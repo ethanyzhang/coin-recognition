@@ -50,14 +50,11 @@ function main(file)
             image = coinImages{i};
             projectedImage = ringProject(image);
             in = reshape(projectedImage, 1, 32040);
-            inputVector = im2double(in);
-            inputVectors(i) = inputVector;
+            inputVectors(i,:) = in;
         end
-        fid = fopen('nn/input.bin', 'wb');
-        fwrite(fid, inputVectors);
-        fclose(fid);
-        system('nn/nn');
-        resultVector = csvread('nn/output.csv');
+        csvwrite(fullfile('data', 'input.csv'), inputVectors);
+        system(fullfile('nn', 'nn'));
+        resultVector = csvread(fullfile('data', 'output.csv'));
         
         % Use Matlab ------------------------------
 %         resultVector = zeros(1, coinImageCount);

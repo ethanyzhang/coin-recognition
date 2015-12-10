@@ -1,0 +1,57 @@
+training_data
+../data/train-images-idx3-ubyte
+
+training_labels
+../data/train-labels-idx1-ubyte
+
+test_data
+../data/t10k-images-idx3-ubyte
+
+test_labels
+../data/t10k-labels-idx1-ubyte
+
+input_count
+32040
+
+output_count
+7
+
+layer_size
+32040 20 7
+
+bias
+1.0
+
+momentum
+0.6
+
+learning_rate
+0.5
+
+max_epoch_count
+100
+
+error_threshold
+0.00001
+
+batch_size
+169
+
+/*** sigmoid (eta 3.0) * hyperbolic (eta 0.01) * relu (eta 0.5) ***/
+activation_type
+sigmoid
+
+/*** measurements parameters ***/
+/*** weight changes (layer#, neuron#;;...) layers/neurons (0, 1, 2, ...) ***/
+weight_changes
+1 0
+1 1
+2 0
+2 1
+#
+/*** activation changes (iter#, layer#, neuron#;;...) layers/neurons (0, 1, 2, ...) ***/
+activation_changes
+2 1 0
+2 1 1
+2 1 2
+#
