@@ -23,7 +23,7 @@ void NeuralData::loadTestData(std::string dataName, std::string labelName) {
 }
 
 bool NeuralData::shuffleData() {
-	std::vector<int> vec(FEATURE_SIZE_COIN, 0);
+	std::vector<int> vec(this->imageCount, 0);
 	std::vector<std::vector<double>> imgTmp(this->imgMat);
 	std::vector<std::vector<double>> tgtTmp(this->tgtMat);
 
@@ -33,7 +33,7 @@ bool NeuralData::shuffleData() {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::shuffle(vec.begin(), vec.end(), std::default_random_engine(seed));
 
-	for (int i = 0; i < FEATURE_SIZE_COIN; i++) {
+	for (int i = 0; i < this->imageCount; i++) {
 		imgMat[i] = imgTmp[vec[i]];
 		tgtMat[i] = tgtTmp[vec[i]];
 	}
@@ -170,7 +170,7 @@ bool NeuralData::listBinFile(const char* pathName, std::vector<std::string>& bin
 			if (ent->d_type == isFile) {
 				tmp = (std::string)(ent->d_name);
 				if (tmp.length() >= 4) {
-					if (tmp.substr(tmp.length() - 4, 4) == ".csv") {
+					if (tmp.substr(tmp.length() - 4, 4) == ".bin") {
 						//std::cout << tmp << "\n";
 						binVec.push_back(tmp);
 					}
@@ -183,46 +183,48 @@ bool NeuralData::listBinFile(const char* pathName, std::vector<std::string>& bin
 	return true;
 }
 
-// void NeuralData::loadAllCoinData() {
-// 	this->listBinFile("../data/", this->binVec);
-// 	for (int idx = 0; idx < TOTAL_CLASS_COUNT_COIN; idx++) {
-// 		this->loadSingleCoinData(binVec[idx], idx);
-// 	}
-//
-// 	this->shuffleData();
-// }
-//
-// void NeuralData::loadSingleCoinData(std::string fileName, int idx) {
-// 	fileName = "../data/" + fileName;
-// 	std::ifstream file(fileName, ios::binary);
-// 	if (file.is_open()) {
-// 		int cnt = 0;
-// 		std::vector<double> tmpVec;
-// 		unsigned char tmp = 0;
-// 		while (file.read((char*)&tmp, sizeof(char))) {
-// 			cnt++;
-// 			tmpVec.push_back(((double)tmp / 255.0));//cout << ((double)tmp) << " ";
-// 			if (cnt == FEATURE_SIZE_COIN) {
-// 				this->imgMat.push_back(tmpVec);
-// 				std::vector<double> tmpVec2(TOTAL_CLASS_COUNT_COIN, 0.1);
-// 				tmpVec2[idx] = 0.9;
-// 				this->tgtMat.push_back(tmpVec2);
-// 				cnt = 0;
-// 				tmpVec.clear();
-// 			}
-// 		}
-// 	}
-// }
-
 void NeuralData::loadAllCoinData() {
-  this->listBinFile("../data/", this->binVec);
-  for (int idx = 0; idx < TOTAL_CLASS_COUNT_COIN; idx++) {
-    this->loadSingleCoinData(binVec[idx], idx);
-    //break;
-  }
-  cerr << "before shuffle" << endl;
-  //this->shuffleData();
-  cerr << "after shuffle" << endl;
+	//this->listBinFile("../data/", this->binVec);
+	this->binVec = {"quarter.csv",
+					"quarter_eagle.csv",
+					"dime.csv",
+					"dime_op.csv",
+					"nickel_head.csv",
+					"nickel_head_2.csv",
+					"nickel_house.csv"};
+	for (int idx = 0; idx < TOTAL_CLASS_COUNT_COIN; idx++) {
+		this->loadSingleCoinData(binVec[idx], idx);
+	}
+	this->imageCount = this->imgMat.size();
+	//cout<<imgMat.size()<<"\n";
+	//cout<<imgMat[5059][15429]<<"\n";
+	this->shuffleData();
+}
+
+void NeuralData::loadTestCoinData() {
+	std::string fileName = "../data/input.csv";
+    //cerr << "fileName: " << fileName << endl;
+    std::ifstream file(fileName, ios::in);
+    if (file.is_open()) {
+        std::vector<double> tmpVec;
+        string::iterator iter;
+        stringstream ss;
+        string inputLine;
+        while (getline(file, inputLine)) {
+          for (iter=inputLine.begin(); iter<=inputLine.end(); iter++) {
+            if (iter == inputLine.end() || *iter == ',') {
+              tmpVec.push_back((std::stod(ss.str()) / 255.0));
+              ss.str("");
+            }
+            else {
+              ss << *iter;
+            }
+          }
+          this->imgMatTest.push_back(tmpVec);
+          tmpVec.clear();
+        }
+
+    }
 }
 
 void NeuralData::loadSingleCoinData(std::string fileName, int idx) {
@@ -250,17 +252,6 @@ void NeuralData::loadSingleCoinData(std::string fileName, int idx) {
           this->tgtMat.push_back(tmpVec2);
           tmpVec.clear();
         }
-        // while (file.read((char*)&tmp, sizeof(char))) {
-        //      cnt++;
-        //      tmpVec.push_back(((double)tmp / 255.0));//cout << ((double)tmp) << " ";
-        //      if (cnt == FEATURE_SIZE_COIN) {
-        //              this->imgMat.push_back(tmpVec);
-        //              std::vector<double> tmpVec2(TOTAL_CLASS_COUNT_COIN, 0.1);
-        //              tmpVec2[idx] = 0.9;
-        //              this->tgtMat.push_back(tmpVec2);
-        //              cnt = 0;
-        //              tmpVec.clear();
-        //      }
-        // }
+
     }
 }

@@ -11,6 +11,7 @@ using namespace std;
 
 bool readParameters(NeuralData& nd, NeuralNet& nn);
 bool readNetwork(NeuralNet& nn);
+bool writeCoinLabel(NeuralData& nd, NeuralNet& nn);
 
 int main(int argc, char** argv) {
 	NeuralData nd;
@@ -21,12 +22,23 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	nn.stocGradDescTrain(nd, 0);
-	//readNetwork(nn2);
+	//nn.stocGradDescTrain(nd, 0);
+	readNetwork(nn2);
 	//std::cout << nn2.getAccuracy(nd) << "\n";
-
+	writeCoinLabel(nd, nn2);
 
 	return 1;
+}
+
+bool writeCoinLabel(NeuralData& nd, NeuralNet& nn) {
+	std::string path = "../data/output.csv";
+	std::ofstream out(path, ios::trunc);
+
+	for (int i = 0; i < nd.imgMatTest.size(); i++) {
+		out << nn.recognize(nd.imgMatTest[i]) + 1 << ",";
+	}
+
+	return true;
 }
 
 bool readNetwork(NeuralNet& nn) {
@@ -178,27 +190,11 @@ bool readParameters(NeuralData& nd, NeuralNet& nn) {
 
 	}
 
-	// if (input_count != 784 || layer_size[0] != 784) {
-	// 	std::cout << "input_count should be 784 for MNIST datasets\n";
-	// 	return false;
-	// }
-	// if (output_count != 10 || layer_size.back() != 10) {
-	// 	std::cout << "output_count should be 10 for MNIST datasets\n";
-	// 	return false;
-	// }
-	// if (layer_size.size() <= 1) {
-	// 	std::cout << "layers count should be > 1\n";
-	// 	return false;
-	// }
-	// if (60000 % batch_size != 0) {
-	// 	std::cout << "batch_size should divide data count(60000) exactly\n";
-	// 	return false;
-	// }
-
 
 	//nd.loadTrainingData(training_data, training_labels);
 	//nd.loadTestData(test_data, test_labels);
-	nd.loadAllCoinData();//cout<<nd.imgMat.size()<<" "<<nd.tgtMat.size();
+	//nd.loadAllCoinData();//cout<<nd.imgMat.size()<<" "<<nd.tgtMat.size();
+	nd.loadTestCoinData();
 
 	nn.loadTrainingParameter(input_count,
 							 output_count,

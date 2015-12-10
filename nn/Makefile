@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS=-std=gnu++11 -O3 -lm
+CPPFLAGS=-std=c++11 -O3 -lm
 
 sources:=$(wildcard *.c) $(wildcard *.cpp)
 

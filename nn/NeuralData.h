@@ -52,6 +52,7 @@ public:
 	std::vector<std::vector<double>> coinTgtMat;
 	std::vector<std::string> binVec;
 	void loadAllCoinData();
+	void loadTestCoinData();
 	void loadSingleCoinData(std::string fileName, int idx);
 
 protected:
