@@ -6,6 +6,11 @@ Artificial neural network is used when there is only one type of coin in the ima
 
 The main part of the program is written in Matlab, the artificial neural network part is written in C++.
 
+**Compile**  
+The C++ nerual network program needs to be compiled. Please enter the `nn` folder and run:
+
+    make
+
 **How to run this program:**
 
 1. To run all the sample images:  
